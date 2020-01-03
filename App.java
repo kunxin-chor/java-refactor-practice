@@ -9,52 +9,60 @@ import java.util.Scanner;
 
 public class App
 {
-    String username;
-    String password;
+    User currentUser;
     ArrayList<Product> products = new ArrayList<>();
     ArrayList<Product> shoppingCart = new ArrayList<>();
 
-    public void readProducts()
-    {
-        try {
-            BufferedReader fr = new BufferedReader(new FileReader("products.txt"));
-            String line = fr.readLine();
-            while (line != null) {
-                // create product from the line
-                String[] chunks = line.split(",");
-                Product p = new Product(chunks[0], Double.parseDouble(chunks[1]));
-                products.add(p);
-                line = fr.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
+    // input function
 
     public void run()
     {
-        readProducts();
+        ProductReader p = new ProductReader();
+        p.readProducts(products);
 
+        printIntro();
+
+        login();
+
+        printProductInformation();
+
+        addToCart();
+
+    }
+
+    public void printIntro()
+    {
         System.out.println("Welcome to ecommerce");
         System.out.println("PLease login");
+    }
 
+    public void login()
+    {
         Scanner sc = new Scanner(System.in);
         System.out.println("Username: ");
-        username = sc.next();
+        String username = sc.next();
         System.out.println("Password:");
-        password = sc.next();
+        String password = sc.next();
 
+        currentUser = new User(username, password);
+    }
+
+    // output
+    public void printProductInformation()
+    {
         for (int i=0; i < products.size(); i++)
         {
+
             System.out.println("Product number:" + i);
             System.out.println("Product Name: " + products.get(i).getProductName());
             System.out.println("Product price:" + products.get(i).getCost());
             System.out.println();
         }
+    }
 
+    public void addToCart()
+    {
+        Scanner sc = new Scanner(System.in);
         System.out.println("Enter the product number you want to add to cart");
         int productNumber = sc.nextInt();
         shoppingCart.add( products.get(productNumber));
